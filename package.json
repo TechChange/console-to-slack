@@ -1,0 +1,32 @@
+{
+  "name": "@techchange/slack-webhooks",
+  "version": "0.0.1",
+  "description": "Private module for integrating with Slack webhooks.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R spec -ui bdd ./tests/slack-webhooks.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/techchange/slack-webhooks.git"
+  },
+  "author": {
+    "name": "Joshua Antonson",
+    "email": "josh@techchange.org",
+    "url": "https://www.techchange.org"
+  },
+  "bugs": {
+    "url": "https://bitbucket.org/techchange/slack-webhooks/issues"
+  },
+  "homepage": "https://bitbucket.org/techchange/slack-webhooks#readme",
+  "publishConfig": {
+    "registry": "https://npm.techchange.org"
+  },
+  "dependencies": {
+    "request": "^2.79.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.14.1",
+    "eslint-config-techchange": "^0.1.2"
+  }
+}
