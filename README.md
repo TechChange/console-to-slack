@@ -1,11 +1,11 @@
-@techchange/slack-webhooks
+console-to-slack
 ==========================
 
-Private NPM module for integrating with Slack webhooks. Currently supports overriding console.error and sending error messages to Slack. 
+NPM module for integrating with Slack webhooks. Currently supports overriding console.log, console.warn, and console.error to send messages to Slack.
 
 ## Installation
 ```
-npm install @techchange/slack-webhooks
+npm install console-to-slack
 ```
 
 ## Usage
@@ -30,4 +30,7 @@ You can utilize the following methods:
 1. You will still see the normal console.error behavior, in addition to the slack error messages via webhooks.
 
 ## Changelog
+- **0.0.2**:
+	- ADDED: Support for console.log and console.warn.
+	- ADDED: Greater customization options to specify channel names and urls.
 - **0.0.1**: Initial commit
