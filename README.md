@@ -11,23 +11,51 @@ npm install console-to-slack
 ## Usage
 Include this module:
 ```javascript
-const tcSlackWebhooks = require('@techchange/slack-webhooks')(settings);
+const consoleToSlack = require('console-to-slack')(options);
 ```
 
-#### Settings
-For slack webhooks to work, settings must include:
+You can use the following methods:
 
-- **settings.slackWebhookUrl**: The url of the slack thread to send messages to.
-- **settings.name**: The name of the service. This is necessary to distinguish the location of the Slack message.
+- **consoleToSlack.overrideAll**: Overrides console.log, console.warn, and console.error to send messages to Slack via webhooks.
+- **consoleToSlack.overrideConsoleLog**: Overrides console.log to send error messages to Slack via webhooks.
+- **consoleToSlack.overrideConsoleWarn**: Overrides console.warn to send error messages to Slack via webhooks.
+- **consoleToSlack.overrideConsoleError**: Overrides console.error to send error messages to Slack via webhooks.
 
-#### Usage
-You can utilize the following methods:
+Ensure that Slack incoming webhooks are setup for your team and channel, which you can find more information about here: https://api.slack.com/incoming-webhooks
 
-- **tcSlackWebhooks.overrideConsoleError**: Overrides console.error to send error messages to Slack via webhooks.
+#### Options
+For console-to-slack to work correctly, the following fields are available to be passed in via options:
+
+- **options.defaultUrl (required)**: The url of the default slack thread to send messages to.
+- **options.name (optional)**: The name of the service. This is necessary to help distinguish the location of the Slack message.
+- **options.channels (optional)**: Can customize channels for log, warn, and error via slack channel name and/or url. If name/url is not specified for log, warn, or error the messages will be sent to the default url.
+
+Example:
+
+```javascript
+const options = {
+	defaultUrl: 'https://hooks.slack.com/services/AAAAAAAAA/BBBBBBBBB/CCCCCCCCCCCCCCCCCCCCCCCC',
+	name: 'My Example Service',
+	channels: {
+		log: {
+			name: '#console_log',
+			url: 'https://hooks.slack.com/services/AAAAAAAAA/BBBBBBBBB/CCCCCCCCCCCCCCCCCCCCCCCC'
+		},
+		warn: {
+			name: '#console_warn',
+			url: 'https://hooks.slack.com/services/AAAAAAAAA/BBBBBBBBB/CCCCCCCCCCCCCCCCCCCCCCCC'
+		},
+		error: {
+			name: '#console_error',
+			url: 'https://hooks.slack.com/services/AAAAAAAAA/BBBBBBBBB/CCCCCCCCCCCCCCCCCCCCCCCC'
+		}
+	}
+}
+```
 
 #### Important Notes
 
-1. You will still see the normal console.error behavior, in addition to the slack error messages via webhooks.
+1. You will still see the normal console.log, console.warn, and console.error behavior, in addition to the slack error messages via webhooks.
 
 ## Changelog
 - **0.0.2**:

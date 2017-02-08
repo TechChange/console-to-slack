@@ -4,23 +4,6 @@ const slackWebhooks = (options) => {
 
 	const defaultUrl = options.defaultUrl;
 	const name = options.name;
-
-	/* This is an example of what channels can look like:
-		channels = {
-			log: {
-				name: '#log_channel',
-				url: 'log_url'
-			},
-			warn: {
-				name: '#warn_channel',
-				url: 'warn_url'
-			},
-			error: {
-				name: '#error_channel',
-				url: 'error_url'
-			}
-		}
-	*/
 	const channels = options.channels;
 
 	/**
@@ -40,10 +23,16 @@ const slackWebhooks = (options) => {
 		console.log = (message) => {
 
 			const slackMessageBody = {
-				text: `*Location*: ${name}\n*Message*: ${message}\n`,
 				username: 'CONSOLE.LOG',
 				mrkdwn: true
 			};
+
+			// Allow optional name of service
+			if (name) {
+				slackMessageBody.text = `*Location*: ${name}\n*Message*: ${message}\n`;
+			} else {
+				slackMessageBody.text = `*Message*: ${message}\n`;
+			}
 
 			// Allow slack channel override
 			if (channels && channels.log && channels.log.name) {
@@ -89,10 +78,16 @@ const slackWebhooks = (options) => {
 		console.warn = (message) => {
 
 			const slackMessageBody = {
-				text: `*Location*: ${name}\n*Message*: ${message}\n`,
 				username: 'CONSOLE.WARN',
 				mrkdwn: true
 			};
+
+			// Allow optional name of service
+			if (name) {
+				slackMessageBody.text = `*Location*: ${name}\n*Message*: ${message}\n`;
+			} else {
+				slackMessageBody.text = `*Message*: ${message}\n`;
+			}
 
 			// Allow slack channel override
 			if (channels && channels.warn && channels.warn.name) {
@@ -139,14 +134,21 @@ const slackWebhooks = (options) => {
 
 			const attachment = {
 				fallback: 'Sorry, but I can\'t display the stack trace for you...',
+				pretext: '',
 				color: '#990000',
 				mrkdwn_in: ['pretext', 'text']
 			};
 
+			// Allow optional name of service
+			if (name) {
+				attachment.pretext += `*Location*: ${name}\n`;
+			}
+
+			// Have support for errors that are both strings and objects
 			if (typeof err === 'string') {
-				attachment.pretext = `*Location*: ${name}\n*CustomError*: ${err}\n`;
+				attachment.pretext += `*CustomError*: ${err}\n`;
 			} else {
-				attachment.pretext = `*Location*: ${name}\n*${err.name}*: ${err.message}\n`;
+				attachment.pretext += `*${err.name}*: ${err.message}\n`;
 				attachment.text = `\`\`\`${err.stack}\`\`\``;
 			}
 
