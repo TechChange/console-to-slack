@@ -27,8 +27,7 @@ var slackWebhooks = function() {
 
 		// Setup the default url
 		if (!url) {
-			console.warn('A url is required for console-to-slack to work correctly.');
-			return;
+			throw new Error('You must provide a default url for console-to-slack to work correctly.');
 		}
 
 		defaultUrl = url;
@@ -53,9 +52,8 @@ var slackWebhooks = function() {
 			privateOverrideLog();
 			privateOverrideWarn();
 			privateOverrideError();
-		// Default is to do nothing
 		} else {
-			console.warn('By default no console usage will be sent to Slack. Please provide a desired console level.');
+			throw new Error('You must provide a console level for console-to-slack to work correctly (1 = console.log, 2 = console.warn, 3 = console.error, 4 = all).');
 		}
 
 	}
