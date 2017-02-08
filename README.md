@@ -36,7 +36,7 @@ The following fields are available to be passed in via options:
 Example:
 
 ```javascript
-const options = {
+var options = {
 	name: 'My Example Service',
 	channels: {
 		log: {
