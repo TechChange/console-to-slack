@@ -18,7 +18,7 @@ var consoleToSlack = require('console-to-slack');
 
 You can use the following methods:
 
-- **consoleToSlack.init(defaultUrl, consoleLevel, options)**
+- **consoleToSlack.init( defaultUrl, consoleLevel, options )**
 	- **defaultUrl (required)**: The url of the default slack thread to send messages to.
 	- **consoleLevel (required)**: The console level (1 - 4) which specifies which console usage to override. Default is to not override anything.
 		- 1 = console.log
@@ -30,8 +30,8 @@ You can use the following methods:
 #### Options
 The following fields are available to be passed in via options:
 
-- **options.name (optional)**: The name of the service. This is necessary to help distinguish the location of the Slack message.
-- **options.channels (optional)**: Can customize channels for log, warn, and error via slack channel name and/or url. If name and url is not specified for log, warn, or error, the messages will be sent to the default url.
+- **options.name**: The name of the service. This is necessary to help distinguish the location of the Slack message.
+- **options.channels**: Can customize channels for log, warn, and error via slack channel name and/or url. If name and url is not specified for log, warn, or error, the messages will be sent to the default url.
 
 Example:
 
