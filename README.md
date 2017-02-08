@@ -8,25 +8,28 @@ NPM module for integrating with Slack webhooks. Currently supports overriding co
 npm install console-to-slack
 ```
 
+Ensure that Slack incoming webhooks are setup for your team and channel, which you can find more information about here: https://api.slack.com/incoming-webhooks
+
 ## Usage
 Include this module:
 ```javascript
-const consoleToSlack = require('console-to-slack')(options);
+var consoleToSlack = require('console-to-slack');
 ```
 
 You can use the following methods:
 
-- **consoleToSlack.overrideAll**: Overrides console.log, console.warn, and console.error to send messages to Slack via webhooks.
-- **consoleToSlack.overrideConsoleLog**: Overrides console.log to send error messages to Slack via webhooks.
-- **consoleToSlack.overrideConsoleWarn**: Overrides console.warn to send error messages to Slack via webhooks.
-- **consoleToSlack.overrideConsoleError**: Overrides console.error to send error messages to Slack via webhooks.
-
-Ensure that Slack incoming webhooks are setup for your team and channel, which you can find more information about here: https://api.slack.com/incoming-webhooks
+- **consoleToSlack.init(defaultUrl, consoleLevel, options)**
+	- **defaultUrl (required)**: The url of the default slack thread to send messages to.
+	- **consoleLevel (required)**: The console level (1 - 4) which specifies which console usage to override. Default is to not override anything.
+		- 1 = console.log
+		- 2 = console.warn
+		- 3 = console.error
+		- 4 = all
+	- **options (optional)**: An object to pass in optional parameters, as described below.
 
 #### Options
-For console-to-slack to work correctly, the following fields are available to be passed in via options:
+The following fields are available to be passed in via options:
 
-- **options.defaultUrl (required)**: The url of the default slack thread to send messages to.
 - **options.name (optional)**: The name of the service. This is necessary to help distinguish the location of the Slack message.
 - **options.channels (optional)**: Can customize channels for log, warn, and error via slack channel name and/or url. If name and url is not specified for log, warn, or error, the messages will be sent to the default url.
 
@@ -34,7 +37,6 @@ Example:
 
 ```javascript
 const options = {
-	defaultUrl: 'https://hooks.slack.com/services/AAAAAAAAA/BBBBBBBBB/CCCCCCCCCCCCCCCCCCCCCCCC',
 	name: 'My Example Service',
 	channels: {
 		log: {
