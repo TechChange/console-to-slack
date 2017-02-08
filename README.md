@@ -28,7 +28,7 @@ For console-to-slack to work correctly, the following fields are available to be
 
 - **options.defaultUrl (required)**: The url of the default slack thread to send messages to.
 - **options.name (optional)**: The name of the service. This is necessary to help distinguish the location of the Slack message.
-- **options.channels (optional)**: Can customize channels for log, warn, and error via slack channel name and/or url. If name/url is not specified for log, warn, or error the messages will be sent to the default url.
+- **options.channels (optional)**: Can customize channels for log, warn, and error via slack channel name and/or url. If name and url is not specified for log, warn, or error, the messages will be sent to the default url.
 
 Example:
 

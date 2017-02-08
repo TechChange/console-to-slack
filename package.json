@@ -1,10 +1,10 @@
 {
   "name": "console-to-slack",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Module for integrating with Slack webhooks.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -R spec -ui bdd ./tests/slack-webhooks.js"
+    "test": "echo 'no tests yet'"
   },
   "repository": {
     "type": "git",
