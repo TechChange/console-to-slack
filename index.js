@@ -42,8 +42,6 @@ var slackWebhooks = function() {
 			channels = options.channels;
 		}
 
-		console.log(consoleLevel);
-
 		// Setup the overrides depending on the chosen level
 		if (consoleLevel === LOG_LEVEL) {
 			privateOverrideLog();
