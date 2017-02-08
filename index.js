@@ -1,28 +1,84 @@
-const request = require('request');
+var request = require('request');
 
-const slackWebhooks = (options) => {
+var slackWebhooks = function() {
 
-	const defaultUrl = options.defaultUrl;
-	const name = options.name;
-	const channels = options.channels;
+	var LOG_LEVEL = 1;
+	var WARN_LEVEL = 2;
+	var ERROR_LEVEL = 3;
+	var ALL_LEVEL = 4;
+
+	var defaultUrl;
+	var name;
+	var channels;
+
+	/**
+	 * Initializes console-to-slack to send messages to Slack on console usage.
+	 *
+	 * @function publicInit
+	 *
+	 * @since 0.0.2
+	 * @access public
+	 * @memberOf console-to-slack
+	 * @param {string} url           The default url to send slack messages to.
+	 * @param {number} consoleLevel  Level which indicates which console usage to override.
+	 * @param {Object} options       Options configurable by the user.
+	 */
+	function publicInit(url, consoleLevel, options) {
+
+		// Setup the default url
+		if (!url) {
+			console.warn('A url is required for console-to-slack to work correctly.');
+			return;
+		}
+
+		defaultUrl = url;
+
+		// Setup the passed-in options
+		if (options && options.name) {
+			name = options.name;
+		}
+
+		if (options && options.channels) {
+			channels = options.channels;
+		}
+
+		console.log(consoleLevel);
+
+		// Setup the overrides depending on the chosen level
+		if (consoleLevel === LOG_LEVEL) {
+			privateOverrideLog();
+		} else if (consoleLevel === WARN_LEVEL) {
+			privateOverrideWarn();
+		} else if (consoleLevel === ERROR_LEVEL) {
+			privateOverrideError();
+		} else if (consoleLevel === ALL_LEVEL) {
+			privateOverrideLog();
+			privateOverrideWarn();
+			privateOverrideError();
+		// Default is to do nothing
+		} else {
+			console.warn('By default no console usage will be sent to Slack. Please provide a desired console level.');
+		}
+
+	}
 
 	/**
 	 * Overrides console.log to send the log messages to Slack via webhooks.
 	 * Note: Original console.log behaves as normal
 	 *
-	 * @function publicOverrideConsoleLog
+	 * @function privateOverrideLog
 	 *
 	 * @since 0.0.2
 	 * @access public
 	 * @memberOf console-to-slack
 	 */
-	function publicOverrideConsoleLog() {
+	function privateOverrideLog() {
 
-		const originalConsoleLog = console.log;
+		var originalConsoleLog = console.log;
 
-		console.log = (message) => {
+		console.log = function(message) {
 
-			const slackMessageBody = {
+			var slackMessageBody = {
 				username: 'CONSOLE.LOG',
 				mrkdwn: true
 			};
@@ -39,21 +95,21 @@ const slackWebhooks = (options) => {
 				slackMessageBody.channel = channels.log.name;
 			}
 
-			let slackWebhookUrl = defaultUrl;
+			var slackWebhookUrl = defaultUrl;
 
 			// Allow slack webhook url override
 			if (channels && channels.log && channels.log.url) {
 				slackWebhookUrl = channels.log.url;
 			}
 
-			const requestBody = {
+			var requestBody = {
 				url: slackWebhookUrl,
 				method: 'POST',
 				body: slackMessageBody,
 				json: true
 			};
 
-			request(requestBody, () => {});
+			request(requestBody, function() {});
 
 			originalConsoleLog(message);
 
@@ -65,19 +121,19 @@ const slackWebhooks = (options) => {
 	 * Overrides console.warn to send the warn messages to Slack via webhooks.
 	 * Note: Original console.warn behaves as normal
 	 *
-	 * @function publicOverrideConsoleWarn
+	 * @function publicOverrideWarn
 	 *
 	 * @since 0.0.2
 	 * @access public
 	 * @memberOf console-to-slack
 	 */
-	function publicOverrideConsoleWarn() {
+	function privateOverrideWarn() {
 
-		const originalConsoleWarn = console.warn;
+		var originalConsoleWarn = console.warn;
 
-		console.warn = (message) => {
+		console.warn = function(message) {
 
-			const slackMessageBody = {
+			var slackMessageBody = {
 				username: 'CONSOLE.WARN',
 				mrkdwn: true
 			};
@@ -94,21 +150,21 @@ const slackWebhooks = (options) => {
 				slackMessageBody.channel = channels.warn.name;
 			}
 
-			let slackWebhookUrl = defaultUrl;
+			var slackWebhookUrl = defaultUrl;
 
 			// Allow slack webhook url override
 			if (channels && channels.warn && channels.warn.url) {
 				slackWebhookUrl = channels.warn.url;
 			}
 
-			const requestBody = {
+			var requestBody = {
 				url: slackWebhookUrl,
 				method: 'POST',
 				body: slackMessageBody,
 				json: true
 			};
 
-			request(requestBody, () => {});
+			request(requestBody, function() {});
 
 			originalConsoleWarn(message);
 
@@ -120,19 +176,19 @@ const slackWebhooks = (options) => {
 	 * Overrides console.error to send the error messages to Slack via webhooks.
 	 * Note: Original console.error behaves as normal
 	 *
-	 * @function publicOverrideConsoleError
+	 * @function publicOverrideError
 	 *
 	 * @since 0.0.1
 	 * @access public
 	 * @memberOf console-to-slack
 	 */
-	function publicOverrideConsoleError() {
+	function privateOverrideError() {
 
-		const originalConsoleError = console.error;
+		var originalConsoleError = console.error;
 
-		console.error = (err) => {
+		console.error = function(err) {
 
-			const attachment = {
+			var attachment = {
 				fallback: 'Sorry, but I can\'t display the stack trace for you...',
 				pretext: '',
 				color: '#990000',
@@ -152,7 +208,7 @@ const slackWebhooks = (options) => {
 				attachment.text = `\`\`\`${err.stack}\`\`\``;
 			}
 
-			const slackMessageBody = {
+			var slackMessageBody = {
 				attachments: [attachment],
 				username: 'CONSOLE.ERROR'
 			};
@@ -162,21 +218,21 @@ const slackWebhooks = (options) => {
 				slackMessageBody.channel = channels.error.name;
 			}
 
-			let slackWebhookUrl = defaultUrl;
+			var slackWebhookUrl = defaultUrl;
 
 			// Allow slack webhook url override
 			if (channels && channels.error && channels.error.url) {
 				slackWebhookUrl = channels.error.url;
 			}
 
-			const requestBody = {
+			var requestBody = {
 				url: slackWebhookUrl,
 				method: 'POST',
 				body: slackMessageBody,
 				json: true
 			};
 
-			request(requestBody, () => {});
+			request(requestBody, function() {});
 
 			originalConsoleError(err);
 
@@ -184,29 +240,10 @@ const slackWebhooks = (options) => {
 
 	}
 
-	/**
-	 * Overrides console.log, console.warn, and console.error to send messages to Slack via webhooks.
-	 * Note: Original console.log, console.warn, and console.error behave as normal
-	 *
-	 * @function publicOverrideAll
-	 *
-	 * @since 0.0.2
-	 * @access public
-	 * @memberOf console-to-slack
-	 */
-	function publicOverrideAll() {
-		publicOverrideConsoleLog();
-		publicOverrideConsoleWarn();
-		publicOverrideConsoleError();
-	}
-
 	return {
-		overrideAll: publicOverrideAll,
-		overrideConsoleLog: publicOverrideConsoleLog,
-		overrideConsoleWarn: publicOverrideConsoleWarn,
-		overrideConsoleError: publicOverrideConsoleError
+		init: publicInit
 	};
 
 };
 
-module.exports = slackWebhooks;
+module.exports = slackWebhooks();
