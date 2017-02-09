@@ -28,7 +28,7 @@ You can use the following methods:
 	- **options (optional)**: An object to pass in optional parameters, as described below.
 
 ```javascript
-var slackUrl = 'https://hooks.slack.com/services/AAAAAAAAA/BBBBBBBBB/CCCCCCCCCCCCCCCCCCCCCCCC'
+var slackUrl = 'https://hooks.slack.com/services/AAAAAAAAA/BBBBBBBBB/CCCCCCCCCCCCCCCCCCCCCCCC';
 
 consoleToSlack.init(slackUrl, 3);
 ```
