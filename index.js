@@ -16,7 +16,7 @@ var slackWebhooks = function() {
 	 *
 	 * @function init
 	 *
-	 * @since 0.0.2
+	 * @since 0.1.0
 	 * @access public
 	 * @memberOf console-to-slack
 	 * @param {string} url           The default url to send slack messages to.
@@ -64,7 +64,7 @@ var slackWebhooks = function() {
 	 *
 	 * @function _overrideLog
 	 *
-	 * @since 0.0.2
+	 * @since 0.1.0
 	 * @access private
 	 * @memberOf console-to-slack
 	 */
@@ -119,7 +119,7 @@ var slackWebhooks = function() {
 	 *
 	 * @function _overrideWarn
 	 *
-	 * @since 0.0.2
+	 * @since 0.1.0
 	 * @access private
 	 * @memberOf console-to-slack
 	 */
@@ -174,7 +174,7 @@ var slackWebhooks = function() {
 	 *
 	 * @function _overrideError
 	 *
-	 * @since 0.0.1
+	 * @since 0.1.0
 	 * @access private
 	 * @memberOf console-to-slack
 	 */

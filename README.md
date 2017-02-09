@@ -60,7 +60,7 @@ var options = {
 1. You will still see the normal console.log, console.warn, and console.error behavior, in addition to the slack error messages via webhooks.
 
 ## Changelog
-- **0.0.2**:
+- **0.1.0**:
 	- ADDED: Support for console.log and console.warn.
 	- ADDED: Greater customization options to specify channel names and urls.
 - **0.0.1**: Initial commit
