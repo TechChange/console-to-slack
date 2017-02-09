@@ -1,14 +1,14 @@
 {
-  "name": "@techchange/slack-webhooks",
-  "version": "0.0.1",
-  "description": "Private module for integrating with Slack webhooks.",
+  "name": "console-to-slack",
+  "version": "0.1.0",
+  "description": "Module for integrating console usage with Slack webhooks.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -R spec -ui bdd ./tests/slack-webhooks.js"
+    "test": "echo 'no tests yet'"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/techchange/slack-webhooks.git"
+    "url": "git+ssh://git@github.com:TechChange/console-to-slack.git"
   },
   "author": {
     "name": "Joshua Antonson",
@@ -16,9 +16,9 @@
     "url": "https://www.techchange.org"
   },
   "bugs": {
-    "url": "https://bitbucket.org/techchange/slack-webhooks/issues"
+    "url": "https://github.com/techchange/console-to-slack/issues"
   },
-  "homepage": "https://bitbucket.org/techchange/slack-webhooks#readme",
+  "homepage": "https://github.com/techchange/console-to-slack#readme",
   "publishConfig": {
     "registry": "https://npm.techchange.org"
   },
