@@ -15,13 +15,19 @@
     "email": "josh@techchange.org",
     "url": "https://www.techchange.org"
   },
+  "keywords": [
+    "slack",
+    "webhook",
+    "console",
+    "log",
+    "warn",
+    "error",
+    "javascript"
+  ],
   "bugs": {
     "url": "https://github.com/techchange/console-to-slack/issues"
   },
   "homepage": "https://github.com/techchange/console-to-slack#readme",
-  "publishConfig": {
-    "registry": "https://npm.techchange.org"
-  },
   "dependencies": {
     "request": "^2.79.0"
   },
