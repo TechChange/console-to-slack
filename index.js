@@ -65,7 +65,7 @@ var slackWebhooks = function() {
 	 * @function _overrideLog
 	 *
 	 * @since 0.0.2
-	 * @access public
+	 * @access private
 	 * @memberOf console-to-slack
 	 */
 	function _overrideLog() {
@@ -120,7 +120,7 @@ var slackWebhooks = function() {
 	 * @function _overrideWarn
 	 *
 	 * @since 0.0.2
-	 * @access public
+	 * @access private
 	 * @memberOf console-to-slack
 	 */
 	function _overrideWarn() {
@@ -175,7 +175,7 @@ var slackWebhooks = function() {
 	 * @function _overrideError
 	 *
 	 * @since 0.0.1
-	 * @access public
+	 * @access private
 	 * @memberOf console-to-slack
 	 */
 	function _overrideError() {
