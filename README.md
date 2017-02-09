@@ -63,7 +63,7 @@ var options = {
 
 #### Important Notes
 
-1. You will still see the normal console.log, console.warn, and console.error behavior, in addition to the slack error messages via webhooks.
+1. You will still see the normal console.log, console.warn, and console.error behavior, in addition to the slack messages.
 
 ## Changelog
 - **0.1.0**:
