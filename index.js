@@ -201,7 +201,12 @@ var slackWebhooks = function() {
 				attachment.pretext += `*CustomError*: ${err}\n`;
 			} else {
 				attachment.pretext += `*${err.name}*: ${err.message}\n`;
-				attachment.text = `\`\`\`${err.stack}\`\`\``;
+
+				const stackTrace = _findStackTrace(err);
+
+				if (stackTrace) {
+					attachment.text = `\`\`\`${stackTrace}\`\`\``;
+				}
 			}
 
 			var slackMessageBody = {
@@ -233,6 +238,43 @@ var slackWebhooks = function() {
 			originalConsoleError(err);
 
 		};
+
+	}
+
+	/**
+	 * Recursively searches an error for the stack trace.
+	 *
+	 * @function _findStackTrace
+	 *
+	 * @since 0.1.1
+	 * @access private
+	 * @memberOf console-to-slack
+	 * @param {object}   error  The error object.
+	 * @returns {string} stack  The stack trace from the error.
+	 */
+	function _findStackTrace(error) {
+
+		if (error.stack) {
+			return error.stack;
+		}
+
+		let result = null;
+
+		for (const prop in error) {
+
+			if (error.hasOwnProperty(prop) && typeof error[prop] === 'object') {
+
+				result = _findStackTrace(error[prop]);
+
+				if (result) {
+					return result;
+				}
+
+			}
+
+		}
+
+		return result;
 
 	}
 
