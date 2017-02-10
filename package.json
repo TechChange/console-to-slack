@@ -1,6 +1,6 @@
 {
   "name": "console-to-slack",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Module for integrating console usage with Slack webhooks.",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,7 @@
     "url": "https://github.com/techchange/console-to-slack/issues"
   },
   "homepage": "https://github.com/techchange/console-to-slack#readme",
+  "license": "MIT",
   "dependencies": {
     "request": "^2.79.0"
   },

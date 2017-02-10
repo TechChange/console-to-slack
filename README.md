@@ -66,6 +66,8 @@ var options = {
 1. You will still see the normal console.log, console.warn, and console.error behavior, in addition to the slack messages.
 
 ## Changelog
+- **0.1.1**:
+	- ADDED: Support for finding strack trace in errors recursively.
 - **0.1.0**:
 	- ADDED: Support for console.log and console.warn.
 	- ADDED: Greater customization options to specify channel names and urls.
