@@ -27,6 +27,12 @@ You can use the following methods:
 		- 4 = all
 	- **options (optional)**: An object to pass in optional parameters, as described below.
 
+```javascript
+var slackUrl = 'https://hooks.slack.com/services/AAAAAAAAA/BBBBBBBBB/CCCCCCCCCCCCCCCCCCCCCCCC';
+
+consoleToSlack.init(slackUrl, 3);
+```
+
 #### Options
 The following fields are available to be passed in via options:
 
@@ -57,9 +63,11 @@ var options = {
 
 #### Important Notes
 
-1. You will still see the normal console.log, console.warn, and console.error behavior, in addition to the slack error messages via webhooks.
+1. You will still see the normal console.log, console.warn, and console.error behavior, in addition to the slack messages.
 
 ## Changelog
+- **0.1.1**:
+	- ADDED: Support for finding strack trace in errors recursively.
 - **0.1.0**:
 	- ADDED: Support for console.log and console.warn.
 	- ADDED: Greater customization options to specify channel names and urls.
