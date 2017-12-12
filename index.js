@@ -199,7 +199,7 @@ var slackWebhooks = function() {
 			// Have support for errors that are both strings and objects
 			if (typeof err === 'string') {
 				attachment.pretext += `*CustomError*: ${err}\n`;
-			} else {
+			} else if (typeof err === 'object') {
 				attachment.pretext += `*${err.name}*: ${err.message}\n`;
 
 				const stackTrace = _findStackTrace(err);
