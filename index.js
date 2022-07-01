@@ -1,15 +1,15 @@
-var request = require('request');
+const axios = require('axios').default;
 
-var slackWebhooks = function() {
+const LOG_LEVEL = 1;
+const WARN_LEVEL = 2;
+const ERROR_LEVEL = 3;
+const ALL_LEVEL = 4;
 
-	var LOG_LEVEL = 1;
-	var WARN_LEVEL = 2;
-	var ERROR_LEVEL = 3;
-	var ALL_LEVEL = 4;
+const slackWebhooks = () => {
 
-	var defaultUrl;
-	var name;
-	var channels;
+	let defaultUrl;
+	let name;
+	let channels;
 
 	/**
 	 * Initializes console-to-slack to send messages to Slack on console usage.
@@ -19,6 +19,7 @@ var slackWebhooks = function() {
 	 * @since 0.1.0
 	 * @access public
 	 * @memberOf console-to-slack
+	 *
 	 * @param {string} url           The default url to send slack messages to.
 	 * @param {number} consoleLevel  Level which indicates which console usage to override.
 	 * @param {Object} options       Options configurable by the user.
@@ -60,6 +61,7 @@ var slackWebhooks = function() {
 
 	/**
 	 * Overrides console.log to send the log messages to Slack via webhooks.
+	 *
 	 * Note: Original console.log behaves as normal
 	 *
 	 * @function _overrideLog
@@ -70,44 +72,48 @@ var slackWebhooks = function() {
 	 */
 	function _overrideLog() {
 
-		var originalConsoleLog = console.log;
+		// Create a copy of the original console.log() method
+		const originalConsoleLog = console.log;
 
-		console.log = function(message) {
-
-			var slackMessageBody = {
-				username: 'CONSOLE.LOG',
-				mrkdwn: true
-			};
-
-			// Allow optional name of service
-			if (name) {
-				slackMessageBody.text = `*Location*: ${name}\n*Message*: ${message}\n`;
-			} else {
-				slackMessageBody.text = `*Message*: ${message}\n`;
-			}
-
-			// Allow slack channel override
-			if (channels && channels.log && channels.log.name) {
-				slackMessageBody.channel = channels.log.name;
-			}
-
-			var slackWebhookUrl = defaultUrl;
-
-			// Allow slack webhook url override
-			if (channels && channels.log && channels.log.url) {
-				slackWebhookUrl = channels.log.url;
-			}
-
-			var requestBody = {
-				url: slackWebhookUrl,
-				method: 'POST',
-				body: slackMessageBody,
-				json: true
-			};
-
-			request(requestBody, function() {});
+		// Override the console.log() method
+		console.log = function(message, options = {}) {
 
 			originalConsoleLog(message);
+
+			if (!options.ignoreSlack) {
+
+				const slackMessageBody = {
+					username: 'CONSOLE.LOG',
+					mrkdwn: true
+				};
+
+				// Allow optional name of service
+				if (name) {
+					slackMessageBody.text = `*Location*: ${name}\n*Message*: ${message}\n`;
+				} else {
+					slackMessageBody.text = `*Message*: ${message}\n`;
+				}
+
+				// Allow slack channel override
+				if (channels && channels.log && channels.log.name) {
+					slackMessageBody.channel = channels.log.name;
+				}
+
+				let slackWebhookUrl = defaultUrl;
+
+				// Allow slack webhook url override
+				if (channels && channels.log && channels.log.url) {
+					slackWebhookUrl = channels.log.url;
+				}
+
+				// Send the data to slack via an API call
+				axios({
+					method: 'POST',
+					url: slackWebhookUrl,
+					data: slackMessageBody,
+				}).catch(() => {});
+
+			}
 
 		};
 
@@ -125,44 +131,48 @@ var slackWebhooks = function() {
 	 */
 	function _overrideWarn() {
 
-		var originalConsoleWarn = console.warn;
+		// Create a copy of the original console.warn() method
+		const originalConsoleWarn = console.warn;
 
-		console.warn = function(message) {
-
-			var slackMessageBody = {
-				username: 'CONSOLE.WARN',
-				mrkdwn: true
-			};
-
-			// Allow optional name of service
-			if (name) {
-				slackMessageBody.text = `*Location*: ${name}\n*Message*: ${message}\n`;
-			} else {
-				slackMessageBody.text = `*Message*: ${message}\n`;
-			}
-
-			// Allow slack channel override
-			if (channels && channels.warn && channels.warn.name) {
-				slackMessageBody.channel = channels.warn.name;
-			}
-
-			var slackWebhookUrl = defaultUrl;
-
-			// Allow slack webhook url override
-			if (channels && channels.warn && channels.warn.url) {
-				slackWebhookUrl = channels.warn.url;
-			}
-
-			var requestBody = {
-				url: slackWebhookUrl,
-				method: 'POST',
-				body: slackMessageBody,
-				json: true
-			};
-
-			request(requestBody, function() {});
+		// Override the console.warn() method
+		console.warn = function(message, options = {}) {
 
 			originalConsoleWarn(message);
+
+			if (!options.ignoreSlack) {
+
+				const slackMessageBody = {
+					username: 'CONSOLE.WARN',
+					mrkdwn: true
+				};
+
+				// Allow optional name of service
+				if (name) {
+					slackMessageBody.text = `*Location*: ${name}\n*Message*: ${message}\n`;
+				} else {
+					slackMessageBody.text = `*Message*: ${message}\n`;
+				}
+
+				// Allow slack channel override
+				if (channels && channels.warn && channels.warn.name) {
+					slackMessageBody.channel = channels.warn.name;
+				}
+
+				let slackWebhookUrl = defaultUrl;
+
+				// Allow slack webhook url override
+				if (channels && channels.warn && channels.warn.url) {
+					slackWebhookUrl = channels.warn.url;
+				}
+
+				// Send the data to slack via an API call
+				axios({
+					method: 'POST',
+					url: slackWebhookUrl,
+					data: slackMessageBody,
+				}).catch(() => {});
+
+			}
 
 		};
 
@@ -180,62 +190,70 @@ var slackWebhooks = function() {
 	 */
 	function _overrideError() {
 
-		var originalConsoleError = console.error;
+		// Create a copy of the original console.error() method
+		const originalConsoleError = console.error;
 
-		console.error = function(err) {
-
-			var attachment = {
-				fallback: 'Sorry, but I can\'t display the stack trace for you...',
-				pretext: '',
-				color: '#990000',
-				mrkdwn_in: ['pretext', 'text']
-			};
-
-			// Allow optional name of service
-			if (name) {
-				attachment.pretext += `*Location*: ${name}\n`;
-			}
-
-			// Have support for errors that are both strings and objects
-			if (typeof err === 'string') {
-				attachment.pretext += `*CustomError*: ${err}\n`;
-			} else if (typeof err === 'object') {
-				attachment.pretext += `*${err.name}*: ${err.message}\n`;
-
-				const stackTrace = _findStackTrace(err);
-
-				if (stackTrace) {
-					attachment.text = `\`\`\`${stackTrace}\`\`\``;
-				}
-			}
-
-			var slackMessageBody = {
-				attachments: [attachment],
-				username: 'CONSOLE.ERROR'
-			};
-
-			// Allow slack channel override
-			if (channels && channels.error && channels.error.name) {
-				slackMessageBody.channel = channels.error.name;
-			}
-
-			var slackWebhookUrl = defaultUrl;
-
-			// Allow slack webhook url override
-			if (channels && channels.error && channels.error.url) {
-				slackWebhookUrl = channels.error.url;
-			}
-
-			var requestBody = {
-				url: slackWebhookUrl,
-				method: 'POST',
-				body: slackMessageBody,
-				json: true
-			};
-
-			request(requestBody, function() {});
+		// Override the console.error() method
+		console.error = function(err, options = {}) {
 
 			originalConsoleError(err);
+
+			if (!options.ignoreSlack) {
+
+				const attachment = {
+					fallback: 'Sorry, but I can\'t display the stack trace for you...',
+					pretext: '',
+					color: '#990000',
+					mrkdwn_in: ['pretext', 'text']
+				};
+
+				// Allow optional name of service
+				if (name) {
+					attachment.pretext += `*Location*: ${name}\n`;
+				}
+
+				// Have support for errors that are both strings and objects
+				if (typeof err === 'string') {
+
+					attachment.pretext += `*CustomError*: ${err}\n`;
+
+				} else if (typeof err === 'object') {
+
+					attachment.pretext += `*${err.name}*: ${err.message}\n`;
+
+					const stackTrace = _findStackTrace(err);
+
+					if (stackTrace) {
+						attachment.text = `\`\`\`${stackTrace}\`\`\``;
+					}
+
+				}
+
+				const slackMessageBody = {
+					attachments: [attachment],
+					username: 'CONSOLE.ERROR'
+				};
+
+				// Allow slack channel override
+				if (channels && channels.error && channels.error.name) {
+					slackMessageBody.channel = channels.error.name;
+				}
+
+				let slackWebhookUrl = defaultUrl;
+
+				// Allow slack webhook url override
+				if (channels && channels.error && channels.error.url) {
+					slackWebhookUrl = channels.error.url;
+				}
+
+				// Send the data to slack via an API call
+				axios({
+					method: 'POST',
+					url: slackWebhookUrl,
+					data: slackMessageBody,
+				}).catch(() => {});
+
+			}
 
 		};
 
@@ -249,6 +267,7 @@ var slackWebhooks = function() {
 	 * @since 0.1.1
 	 * @access private
 	 * @memberOf console-to-slack
+	 *
 	 * @param {object}   error  The error object.
 	 * @returns {string} stack  The stack trace from the error.
 	 */

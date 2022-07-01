@@ -1,6 +1,6 @@
 {
   "name": "console-to-slack",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Module for integrating console usage with Slack webhooks.",
   "main": "index.js",
   "scripts": {
@@ -11,8 +11,8 @@
     "url": "git+ssh://git@github.com:TechChange/console-to-slack.git"
   },
   "author": {
-    "name": "Joshua Antonson",
-    "email": "josh@techchange.org",
+    "name": "TechChange",
+    "email": "dev@techchange.org",
     "url": "https://www.techchange.org"
   },
   "keywords": [
@@ -30,7 +30,7 @@
   "homepage": "https://github.com/techchange/console-to-slack#readme",
   "license": "MIT",
   "dependencies": {
-    "request": "^2.79.0"
+    "axios": "^0.27.2"
   },
   "devDependencies": {
     "eslint": "^3.14.1",
