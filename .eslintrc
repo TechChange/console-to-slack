@@ -2,10 +2,4 @@
 	"extends": [
 		"eslint-config-techchange"
 	],
-	"rules": {
-        // Override our default settings just for this module
-        "no-var": "off",
-        "func-names": "off",
-        "prefer-arrow-callback": "off"
-    }
 }

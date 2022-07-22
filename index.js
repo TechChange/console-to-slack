@@ -76,7 +76,7 @@ const slackWebhooks = () => {
 		const originalConsoleLog = console.log;
 
 		// Override the console.log() method
-		console.log = function(message, options = {}) {
+		console.log = (message, options = {}) => {
 
 			originalConsoleLog(message);
 
@@ -135,7 +135,7 @@ const slackWebhooks = () => {
 		const originalConsoleWarn = console.warn;
 
 		// Override the console.warn() method
-		console.warn = function(message, options = {}) {
+		console.warn = (message, options = {}) => {
 
 			originalConsoleWarn(message);
 
@@ -194,7 +194,7 @@ const slackWebhooks = () => {
 		const originalConsoleError = console.error;
 
 		// Override the console.error() method
-		console.error = function(err, options = {}) {
+		console.error = (err, options = {}) => {
 
 			originalConsoleError(err);
 
