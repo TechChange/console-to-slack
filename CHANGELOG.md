@@ -1,0 +1,14 @@
+## Changelog
+- **1.0.0**
+	- BREAKING: Update supported engines to `node@16` and `npm@8`.
+- **0.2.0**
+        - ADDED: Support for ignoring slack messages for individual uses of `console.log()`, `console.warn()`, and `console.error()`.
+        - FIXED: Switch from the DEPRECATED `request` library to the `axios` library for API requests.
+- **0.1.2**:
+        - FIXED: Explicit check for the error being an object before referencing its properties.
+- **0.1.1**:
+        - ADDED: Support for finding strack trace in errors recursively.
+- **0.1.0**:
+        - ADDED: Support for console.log and console.warn.
+        - ADDED: Greater customization options to specify channel names and urls.
+- **0.0.1**: Initial commit
