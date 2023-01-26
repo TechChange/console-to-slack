@@ -5,6 +5,12 @@ const WARN_LEVEL = 2;
 const ERROR_LEVEL = 3;
 const ALL_LEVEL = 4;
 
+// eslint-disable-next-line max-len
+const ERROR_MSG_MISSING_OPTION_URL = 'You must provide a default url for console-to-slack to work correctly.';
+
+// eslint-disable-next-line max-len
+const ERROR_MSG_MISSING_OPTION_CONSOLE_LEVEL = 'You must provide a console level for console-to-slack to work correctly (1 = console.log, 2 = console.warn, 3 = console.error, 4 = all).';
+
 const slackWebhooks = () => {
 
 	let defaultUrl;
@@ -28,7 +34,7 @@ const slackWebhooks = () => {
 
 		// Setup the default url
 		if (!url) {
-			throw new Error('You must provide a default url for console-to-slack to work correctly.');
+			throw new Error(ERROR_MSG_MISSING_OPTION_URL);
 		}
 
 		defaultUrl = url;
@@ -44,17 +50,27 @@ const slackWebhooks = () => {
 
 		// Setup the overrides depending on the chosen level
 		if (consoleLevel === LOG_LEVEL) {
+
 			_overrideLog();
+
 		} else if (consoleLevel === WARN_LEVEL) {
+
 			_overrideWarn();
+
 		} else if (consoleLevel === ERROR_LEVEL) {
+
 			_overrideError();
+
 		} else if (consoleLevel === ALL_LEVEL) {
+
 			_overrideLog();
 			_overrideWarn();
 			_overrideError();
+
 		} else {
-			throw new Error('You must provide a console level for console-to-slack to work correctly (1 = console.log, 2 = console.warn, 3 = console.error, 4 = all).');
+
+			throw new Error(ERROR_MSG_MISSING_OPTION_CONSOLE_LEVEL);
+
 		}
 
 	}
@@ -273,20 +289,25 @@ const slackWebhooks = () => {
 	 */
 	function _findStackTrace(error) {
 
-		if (error.stack) {
-			return error.stack;
-		}
-
 		let result = null;
 
-		for (const prop in error) {
+		if (error) {
 
-			if (error.hasOwnProperty(prop) && typeof error[prop] === 'object') {
+			if (error.stack) {
+				return error.stack;
+			}
 
-				result = _findStackTrace(error[prop]);
+			for (const prop in error) {
 
-				if (result) {
-					return result;
+				if (error.hasOwnProperty(prop) &&
+					typeof error[prop] === 'object') {
+
+					result = _findStackTrace(error[prop]);
+
+					if (result) {
+						return result;
+					}
+
 				}
 
 			}
