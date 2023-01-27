@@ -242,19 +242,34 @@ const slackWebhooks = () => {
 						attachment.pretext += `*Location*: ${name}\n`;
 					}
 
-					// Have support for errors that are both strings and objects
+					// Check if the error is a string
 					if (typeof err === 'string') {
 
 						attachment.pretext += `*CustomError*: ${err}\n`;
 
+					// Check if the error is an object
 					} else if (typeof err === 'object') {
 
-						attachment.pretext += `*${err.name}*: ${err.message}\n`;
+						// Check if the error is a NodeJS (express/koa) API response error
+						if (err.statusCode) {
 
-						const stackTrace = _findStackTrace(err);
+							attachment.pretext += `*${err.statusCode}*: ${err.errorMessage}\n`;
 
-						if (stackTrace) {
-							attachment.text = `\`\`\`${stackTrace}\`\`\``;
+							if (err.userMessage) {
+								attachment.text = `\`\`\`${err.userMessage}\`\`\``;
+							}
+
+						// Otherwise, assume it is a normal JavaScript error
+						} else {
+
+							attachment.pretext += `*${err.name}*: ${err.message}\n`;
+
+							const stackTrace = _findStackTrace(err);
+
+							if (stackTrace) {
+								attachment.text = `\`\`\`${stackTrace}\`\`\``;
+							}
+
 						}
 
 					}

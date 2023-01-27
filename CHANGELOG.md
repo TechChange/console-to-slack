@@ -1,4 +1,6 @@
 # Changelog
+- **1.0.2**
+	- FIXED: Fix bug with `console.error()` handling of NodeJS (express/koa) API response errors. Updated to correctly parse the `statusCode`, `errorMessage`, `userMessage` values and send to Slack.
 - **1.0.1**
 	- FIXED: Fix bug with `_findStackTrace` throwing error if `error` parameter is undefined or null.
 - **1.0.0**
