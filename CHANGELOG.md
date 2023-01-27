@@ -1,4 +1,6 @@
 # Changelog
+- **1.0.1**
+	- FIXED: Fix bug with `_findStackTrace` throwing error if `error` parameter is undefined or null.
 - **1.0.0**
 	- BREAKING: Update supported engines to `node@16` and `npm@8`.
 - **0.2.0**
