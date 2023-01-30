@@ -1,6 +1,6 @@
 {
   "name": "console-to-slack",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Module for integrating console usage with Slack webhooks.",
   "main": "index.js",
   "engines": {
