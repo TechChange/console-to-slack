@@ -253,20 +253,38 @@ const slackWebhooks = () => {
 						// Check if the error is a NodeJS (express/koa) API response error
 						if (err.statusCode) {
 
-							attachment.pretext += `*${err.statusCode}*: ${err.errorMessage}\n`;
+							attachment.pretext += `*StatusCode*: ${err.statusCode}\n`;
 
-							let textBlock;
+							if (err.errorMessage) {
+								attachment.pretext += `*ErrorMessage*: ${err.errorMessage}\n`;
+							}
 
 							if (err.userMessage) {
-								textBlock = err.userMessage;
+								attachment.pretext += `*UserMessage*: ${err.userMessage}\n`;
 							}
 
+							let codeBlock;
+
+							// Attempt to parse the error data array
 							if (err.errors) {
-								textBlock += `\n${err.errors}`;
+								codeBlock += JSON.stringify(err.errors);
 							}
 
-							if (textBlock) {
-								attachment.text = `\`\`\`${textBlock}\`\`\``;
+							// Attempt to parse the error stack trace
+							const stackTrace = _findStackTrace(err);
+
+							if (stackTrace) {
+
+								if (codeBlock) {
+									codeBlock += '\n\n';
+								}
+
+								codeBlock += stackTrace;
+
+							}
+
+							if (codeBlock) {
+								attachment.text = `\`\`\`${codeBlock}\`\`\``;
 							}
 
 						// Otherwise, assume it is a normal JavaScript error
@@ -274,6 +292,7 @@ const slackWebhooks = () => {
 
 							attachment.pretext += `*${err.name}*: ${err.message}\n`;
 
+							// Attempt to parse the error stack trace
 							const stackTrace = _findStackTrace(err);
 
 							if (stackTrace) {
