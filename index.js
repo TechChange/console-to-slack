@@ -255,8 +255,18 @@ const slackWebhooks = () => {
 
 							attachment.pretext += `*${err.statusCode}*: ${err.errorMessage}\n`;
 
+							let textBlock;
+
 							if (err.userMessage) {
-								attachment.text = `\`\`\`${err.userMessage}\`\`\``;
+								textBlock = err.userMessage;
+							}
+
+							if (err.errors) {
+								textBlock += `\n${err.errors}`;
+							}
+
+							if (textBlock) {
+								attachment.text = `\`\`\`${textBlock}\`\`\``;
 							}
 
 						// Otherwise, assume it is a normal JavaScript error
