@@ -26,7 +26,12 @@ const slackWebhooks = () => {
 	 *
 	 * @param {string} url           The default url to send slack messages to.
 	 * @param {number} consoleLevel  Level which indicates which console usage to override.
-	 * @param {Object} options       The default initialization options.
+	 *
+	 * @param {object} options                 The initialization options.
+	 * @param {string} options.name            The default service name.
+	 * @param {object} options.channels.log    The override options for "console.log" (if any).
+	 * @param {object} options.channels.warn   The override options for "console.warn" (if any).
+	 * @param {object} options.channels.error  The override options for "console.error" (if any).
 	 */
 	function init(url, consoleLevel, options = {}) {
 
@@ -35,24 +40,31 @@ const slackWebhooks = () => {
 			throw new Error(ERROR_MSG_MISSING_OPTION_URL);
 		}
 
+		// Setup the default service name
+		const name = options.name;
+
+		// Setup the override options for the slack channels
+		// for each of log, warn, and error
+		const channels = options.channels;
+
 		// Setup the overrides depending on the chosen level
 		if (consoleLevel === LOG_LEVEL) {
 
-			overrideLog(url, options);
+			overrideLog(url, name, channels);
 
 		} else if (consoleLevel === WARN_LEVEL) {
 
-			overrideWarn(url, options);
+			overrideWarn(url, name, channels);
 
 		} else if (consoleLevel === ERROR_LEVEL) {
 
-			overrideError(url, options);
+			overrideError(url, name, channels);
 
 		} else if (consoleLevel === ALL_LEVEL) {
 
-			overrideLog(url, options);
-			overrideWarn(url, options);
-			overrideError(url, options);
+			overrideLog(url, name, channels);
+			overrideWarn(url, name, channels);
+			overrideError(url, name, channels);
 
 		} else {
 
