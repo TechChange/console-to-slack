@@ -1,7 +1,7 @@
 console-to-slack
 ==========================
 
-NPM module for integrating with Slack webhooks. Currently supports overriding console.log, console.warn, and console.error to send messages to Slack.
+[NPM module](https://www.npmjs.com/package/console-to-slack) for integrating with Slack webhooks. Currently supports overriding console.log, console.warn, and console.error to send messages to Slack.
 
 ## Installation
 
