@@ -1,4 +1,6 @@
-const axios = require('axios').default;
+const overrideLog = require('./lib/log');
+const overrideWarn = require('./lib/warn');
+const overrideError = require('./lib/error');
 
 const LOG_LEVEL = 1;
 const WARN_LEVEL = 2;
@@ -13,10 +15,6 @@ const ERROR_MSG_MISSING_OPTION_CONSOLE_LEVEL = 'You must provide a console level
 
 const slackWebhooks = () => {
 
-	let defaultUrl;
-	let name;
-	let channels;
-
 	/**
 	 * Initializes console-to-slack to send messages to Slack on console usage.
 	 *
@@ -28,326 +26,51 @@ const slackWebhooks = () => {
 	 *
 	 * @param {string} url           The default url to send slack messages to.
 	 * @param {number} consoleLevel  Level which indicates which console usage to override.
-	 * @param {Object} options       Options configurable by the user.
+	 *
+	 * @param {object} options                 The initialization options.
+	 * @param {string} options.name            The default service name.
+	 * @param {object} options.channels.log    The override options for "console.log" (if any).
+	 * @param {object} options.channels.warn   The override options for "console.warn" (if any).
+	 * @param {object} options.channels.error  The override options for "console.error" (if any).
 	 */
-	function init(url, consoleLevel, options) {
+	function init(url, consoleLevel, options = {}) {
 
 		// Setup the default url
 		if (!url) {
 			throw new Error(ERROR_MSG_MISSING_OPTION_URL);
 		}
 
-		defaultUrl = url;
+		// Setup the default service name
+		const name = options.name;
 
-		// Setup the passed-in options
-		if (options && options.name) {
-			name = options.name;
-		}
-
-		if (options && options.channels) {
-			channels = options.channels;
-		}
+		// Setup the override options for the slack channels
+		// for each of log, warn, and error
+		const channels = options.channels;
 
 		// Setup the overrides depending on the chosen level
 		if (consoleLevel === LOG_LEVEL) {
 
-			_overrideLog();
+			overrideLog(url, name, channels);
 
 		} else if (consoleLevel === WARN_LEVEL) {
 
-			_overrideWarn();
+			overrideWarn(url, name, channels);
 
 		} else if (consoleLevel === ERROR_LEVEL) {
 
-			_overrideError();
+			overrideError(url, name, channels);
 
 		} else if (consoleLevel === ALL_LEVEL) {
 
-			_overrideLog();
-			_overrideWarn();
-			_overrideError();
+			overrideLog(url, name, channels);
+			overrideWarn(url, name, channels);
+			overrideError(url, name, channels);
 
 		} else {
 
 			throw new Error(ERROR_MSG_MISSING_OPTION_CONSOLE_LEVEL);
 
 		}
-
-	}
-
-	/**
-	 * Overrides console.log to send the log messages to Slack via webhooks.
-	 *
-	 * Note: Original console.log behaves as normal
-	 *
-	 * @function _overrideLog
-	 *
-	 * @since 0.1.0
-	 * @access private
-	 * @memberOf console-to-slack
-	 */
-	function _overrideLog() {
-
-		// Create a copy of the original console.log() method
-		const originalConsoleLog = console.log;
-
-		// Override the console.log() method
-		console.log = (message, options = {}) => {
-
-			originalConsoleLog(message);
-
-			try {
-
-				if (!options.ignoreSlack) {
-
-					const slackMessageBody = {
-						username: 'CONSOLE.LOG',
-						mrkdwn: true
-					};
-
-					// Allow optional name of service
-					if (name) {
-						slackMessageBody.text = `*Location*: ${name}\n*Message*: ${message}\n`;
-					} else {
-						slackMessageBody.text = `*Message*: ${message}\n`;
-					}
-
-					// Allow slack channel override
-					if (channels && channels.log && channels.log.name) {
-						slackMessageBody.channel = channels.log.name;
-					}
-
-					let slackWebhookUrl = defaultUrl;
-
-					// Allow slack webhook url override
-					if (channels && channels.log && channels.log.url) {
-						slackWebhookUrl = channels.log.url;
-					}
-
-					// Send the data to slack via an API call
-					axios({
-						method: 'POST',
-						url: slackWebhookUrl,
-						data: slackMessageBody,
-					}).catch(() => {});
-
-				}
-
-			} catch (error) {
-				originalConsoleLog(error);
-			}
-
-		};
-
-	}
-
-	/**
-	 * Overrides console.warn to send the warn messages to Slack via webhooks.
-	 * Note: Original console.warn behaves as normal
-	 *
-	 * @function _overrideWarn
-	 *
-	 * @since 0.1.0
-	 * @access private
-	 * @memberOf console-to-slack
-	 */
-	function _overrideWarn() {
-
-		// Create a copy of the original console.warn() method
-		const originalConsoleWarn = console.warn;
-
-		// Override the console.warn() method
-		console.warn = (message, options = {}) => {
-
-			originalConsoleWarn(message);
-
-			try {
-
-				if (!options.ignoreSlack) {
-
-					const slackMessageBody = {
-						username: 'CONSOLE.WARN',
-						mrkdwn: true
-					};
-
-					// Allow optional name of service
-					if (name) {
-						slackMessageBody.text = `*Location*: ${name}\n*Message*: ${message}\n`;
-					} else {
-						slackMessageBody.text = `*Message*: ${message}\n`;
-					}
-
-					// Allow slack channel override
-					if (channels && channels.warn && channels.warn.name) {
-						slackMessageBody.channel = channels.warn.name;
-					}
-
-					let slackWebhookUrl = defaultUrl;
-
-					// Allow slack webhook url override
-					if (channels && channels.warn && channels.warn.url) {
-						slackWebhookUrl = channels.warn.url;
-					}
-
-					// Send the data to slack via an API call
-					axios({
-						method: 'POST',
-						url: slackWebhookUrl,
-						data: slackMessageBody,
-					}).catch(() => {});
-
-				}
-
-			} catch (error) {
-				originalConsoleWarn(error);
-			}
-
-		};
-
-	}
-
-	/**
-	 * Overrides console.error to send the error messages to Slack via webhooks.
-	 * Note: Original console.error behaves as normal
-	 *
-	 * @function _overrideError
-	 *
-	 * @since 0.1.0
-	 * @access private
-	 * @memberOf console-to-slack
-	 */
-	function _overrideError() {
-
-		// Create a copy of the original console.error() method
-		const originalConsoleError = console.error;
-
-		// Override the console.error() method
-		console.error = (err, options = {}) => {
-
-			originalConsoleError(err);
-
-			try {
-
-				if (!options.ignoreSlack) {
-
-					const attachment = {
-						fallback: 'Sorry, but I can\'t display the stack trace for you...',
-						pretext: '',
-						color: '#990000',
-						mrkdwn_in: ['pretext', 'text']
-					};
-
-					// Allow optional name of service
-					if (name) {
-						attachment.pretext += `*Location*: ${name}\n`;
-					}
-
-					// Check if the error is a string
-					if (typeof err === 'string') {
-
-						attachment.pretext += `*CustomError*: ${err}\n`;
-
-					// Check if the error is an object
-					} else if (typeof err === 'object') {
-
-						// Check if the error is a NodeJS (express/koa) API response error
-						if (err.statusCode) {
-
-							attachment.pretext += `*${err.statusCode}*: ${err.errorMessage}\n`;
-
-							if (err.userMessage) {
-								attachment.text = `\`\`\`${err.userMessage}\`\`\``;
-							}
-
-						// Otherwise, assume it is a normal JavaScript error
-						} else {
-
-							attachment.pretext += `*${err.name}*: ${err.message}\n`;
-
-							const stackTrace = _findStackTrace(err);
-
-							if (stackTrace) {
-								attachment.text = `\`\`\`${stackTrace}\`\`\``;
-							}
-
-						}
-
-					}
-
-					const slackMessageBody = {
-						attachments: [attachment],
-						username: 'CONSOLE.ERROR'
-					};
-
-					// Allow slack channel override
-					if (channels && channels.error && channels.error.name) {
-						slackMessageBody.channel = channels.error.name;
-					}
-
-					let slackWebhookUrl = defaultUrl;
-
-					// Allow slack webhook url override
-					if (channels && channels.error && channels.error.url) {
-						slackWebhookUrl = channels.error.url;
-					}
-
-					// Send the data to slack via an API call
-					axios({
-						method: 'POST',
-						url: slackWebhookUrl,
-						data: slackMessageBody,
-					}).catch(() => {});
-
-				}
-
-			} catch (error) {
-				console.error(originalConsoleError);
-			}
-
-		};
-
-	}
-
-	/**
-	 * Recursively searches an error for the stack trace.
-	 *
-	 * @function _findStackTrace
-	 *
-	 * @since 0.1.1
-	 * @access private
-	 * @memberOf console-to-slack
-	 *
-	 * @param {object}   error  The error object.
-	 * @returns {string} stack  The stack trace from the error.
-	 */
-	function _findStackTrace(error) {
-
-		let result = null;
-
-		if (error) {
-
-			if (error.stack) {
-				return error.stack;
-			}
-
-			for (const prop in error) {
-
-				if (error.hasOwnProperty(prop) &&
-					typeof error[prop] === 'object') {
-
-					result = _findStackTrace(error[prop]);
-
-					if (result) {
-						return result;
-					}
-
-				}
-
-			}
-
-		}
-
-		return result;
 
 	}
 

@@ -1,4 +1,6 @@
 # Changelog
+- **1.1.0**
+	- ADDED: Add parsing of NodeJS `err.errors` data array for more fine-grained error information.
 - **1.0.2**
 	- FIXED: Fix bug with `console.error()` handling of NodeJS (express/koa) API response errors. Updated to correctly parse the `statusCode`, `errorMessage`, `userMessage` values and send to Slack.
 - **1.0.1**
