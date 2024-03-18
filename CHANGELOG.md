@@ -1,4 +1,7 @@
 # Changelog
+- **2.0.0**
+	- BREAKING: Update supported engines to `node@20` and `npm@10`.
+	- FIXED: Minor security patch for `axios`.
 - **1.1.0**
 	- ADDED: Add parsing of NodeJS `err.errors` data array for more fine-grained error information.
 - **1.0.2**
