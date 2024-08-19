@@ -1,4 +1,6 @@
 # Changelog
+- **2.0.0**
+	- BREAKING: Make `axios` a peer-dependency and upgrade from `v0.27.2` to `v1.7.4`.
 - **1.1.0**
 	- ADDED: Add parsing of NodeJS `err.errors` data array for more fine-grained error information.
 - **1.0.2**
